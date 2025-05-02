@@ -18,8 +18,7 @@
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "zod": "^3.22.4",
-    "exemption-iq": "file:vendor/exemption-iq"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
