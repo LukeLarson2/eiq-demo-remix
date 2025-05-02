@@ -1,0 +1,21 @@
+import { getSessionToken } from "__EIQ_VENDOR__/getSessionToken";
+
+export async function GET() {
+  try {
+    const sessionToken = await getSessionToken();
+
+    return new Response(JSON.stringify({ token: sessionToken.token }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Set-Cookie": `eiq_session_token=${sessionToken.token}; Path=/; Max-Age=3600; HttpOnly; SameSite=Lax`,
+      },
+    });
+  } catch (err: any) {
+    console.error("❌ Failed to generate session token:", err);
+    return new Response(
+      JSON.stringify({ error: err.message || "Session token error" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
