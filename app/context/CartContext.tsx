@@ -124,9 +124,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
-      const parsed = JSON.parse(savedCart);
-      for (const item of parsed.items) {
-        dispatch({ type: "ADD_ITEM", payload: item });
+      try {
+        const parsed = JSON.parse(savedCart);
+        if (parsed && Array.isArray(parsed.items)) {
+          for (const item of parsed.items) {
+            dispatch({ type: "ADD_ITEM", payload: item });
+          }
+        }
+      } catch (error) {
+        console.warn("Failed to parse saved cart:", error);
+        // Optional: clear invalid cart data
+        localStorage.removeItem("cart");
       }
     }
     setIsLoaded(true);

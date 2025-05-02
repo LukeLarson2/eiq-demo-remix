@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ExemptionIqClient } from "vendor/exemption-iq/dist";
 import { ClientOnly } from "~/components/ClientOnly";
 import { useCart } from "~/context/CartContext";
+import { ErrorBoundary } from "~/context/ErrorBoundary";
 
 export default function Cart() {
   const { state, updateQuantity, removeItem } = useCart();
@@ -31,8 +32,18 @@ export default function Cart() {
   };
 
   const buttonStyles = JSON.stringify({
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "0.375rem", // matches Tailwind's rounded-md
+    padding: "0.5rem 1rem", // px-4 = 1rem, py-2 = 0.5rem
+    fontSize: "0.875rem", // text-sm
+    fontWeight: 500, // font-medium
+    transition:
+      "color 150ms ease, background-color 150ms ease, border-color 150ms ease",
+    outline: "none", // focus:outline-none
     width: "100%",
-    height: "fit",
+    height: "fit-content",
   });
 
   return (
@@ -156,19 +167,21 @@ export default function Cart() {
                 </div>
 
                 <div className="mt-6 space-y-2">
-                  <ClientOnly>
-                    <ExemptionIqClient
-                      customerCode="ACME001"
-                      customerInfo={customerInfo}
-                      state="Florida"
-                      primaryColor="#2966B1"
-                      onComplete={handleExemptionComplete}
-                      framework="remix"
-                      buttonStyles={buttonStyles}
-                      manualValidation={false}
-                      showDownload={true}
-                    />
-                  </ClientOnly>
+                  <ErrorBoundary>
+                    <ClientOnly>
+                      <ExemptionIqClient
+                        customerCode="ACME001"
+                        customerInfo={customerInfo}
+                        state="Florida"
+                        primaryColor="#2966B1"
+                        onComplete={handleExemptionComplete}
+                        framework="remix"
+                        buttonStyles={buttonStyles}
+                        manualValidation={false}
+                        showDownload={true}
+                      />
+                    </ClientOnly>
+                  </ErrorBoundary>
 
                   <Link to="/checkout" className="w-full btn btn-primary">
                     Checkout
